@@ -32,6 +32,12 @@ CHIP8 *CHIP8_new()
     return cpu;
 }
 
+void CHIP8_destroy(CHIP8 *cpu)
+{
+    free(cpu->ram);
+    free(cpu);
+}
+
 u8 mem_read_u8(CHIP8 *cpu, u16 addr)
 {
     return cpu->ram[addr];

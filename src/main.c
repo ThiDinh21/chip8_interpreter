@@ -9,5 +9,7 @@ int main()
 
     printf("%d", cpu->v[5]);
 
+    CHIP8_destroy(cpu);
+
     return 0;
 }
