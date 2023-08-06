@@ -46,18 +46,34 @@ typedef struct Chip8
 CHIP8 *CHIP8_new();
 
 /// @brief CHIP8's destructor, will free allocated memory for the RAM
-/// @param a pointer to the CHIP8 that need to be freed
-void CHIP8_destroy(CHIP8 *);
+/// @param cpu - a pointer to the CHIP8 that need to be freed
+void CHIP8_destroy(CHIP8 *cpu);
 
-u8 mem_read_u8(CHIP8 *, u16);
+/// @brief Read the byte at the address in the RAM of the CPU
+/// @param cpu - a pointer to the CPU
+/// @param addr - address of the data
+/// @return a byte read from RAM
+u8 mem_read_u8(CHIP8 *cpu, u16 addr);
 
-void mem_write_u8(CHIP8 *, u16, u8);
+/// @brief Write a byte to the CPU's RAM at the adress
+/// @param cpu - a pointer to the CPU
+/// @param addr - address of the data
+/// @param data - data to be writen
+void mem_write_u8(CHIP8 *cpu, u16 addr, u8 data);
 
-u16 mem_read_u16(CHIP8 *, u16);
+/// @brief Read the byte and the one after that (big-edian) at the address in the RAM of the CPU
+/// @param cpu - a pointer to the CPU
+/// @param addr - address of the data
+/// @return 2 bytes read from RAM in big-edian
+u16 mem_read_u16(CHIP8 *cpu, u16 addr);
 
-void mem_write_u16(CHIP8 *, u16, u16);
+/// @brief Write 2 bytes (big-edian) to the CPU's RAM at the adress
+/// @param cpu - a pointer to the CPU
+/// @param addr - address of the data
+/// @param data - data to be writen
+void mem_write_u16(CHIP8 *cpu, u16 addr, u16 data);
 
-u16 fetchOpcode(CHIP8 *);
+u16 fetchOpcode(CHIP8 *cpu);
 
 /// @brief CHIP-8's common built-in font. Stored in 0x50 - 0x9F
 const u8 font[16][16] = {
