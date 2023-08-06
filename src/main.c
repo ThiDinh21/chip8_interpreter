@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <errno.h>
-// #include "chip8.h"
+#include "chip8.h"
 
 int main()
 {
-    FILE *fpointer;
-    // fpointer = fopen("DataFlair.txt", "r"); // Opening the file
-    printf(" The value of errno is: %d\n", errno);
+    CHIP8 *cpu = CHIP8_new();
+
+    printf("%d", cpu->v[5]);
 
     return 0;
 }

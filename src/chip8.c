@@ -1,4 +1,17 @@
+#include <stdlib.h>
+#include <string.h>
 #include "chip8.h"
+
+CHIP8 *CHIP8_new()
+{
+    CHIP8 *cpu = calloc(61, sizeof(u8));
+    cpu->ram = calloc(4096, sizeof(u8));
+    memset(cpu->v, 0, sizeof(cpu->v));
+    memset(cpu->stack, 0, sizeof(cpu->stack));
+    // TODO: init delay, sound, pc, sp
+
+    return cpu;
+}
 
 u8 mem_read_u8(CHIP8 *cpu, u16 addr)
 {

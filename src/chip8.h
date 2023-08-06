@@ -9,7 +9,7 @@ typedef uint16_t u16;
 typedef struct Chip8
 {
     // http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#memmap
-    // Memory Map:
+    // Memory Map (4kB = 4096 bytes):
     // +---------------+= 0xFFF (4095) End of Chip-8 RAM
     // |               |
     // |               |
