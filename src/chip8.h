@@ -6,7 +6,7 @@
 typedef uint8_t u8;
 typedef uint16_t u16;
 
-struct CHIP8
+typedef struct Chip8
 {
     // http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#memmap
     // Memory Map:
@@ -33,13 +33,23 @@ struct CHIP8
     // |  interpreter  |
     // +---------------+= 0x000 (0) Start of Chip-8 RAM
     u8 *ram;
-    u16 stack[16];
-    u8 v[16]; // 16 general purpose 8-bit registers
-    u16 i;    // 16-bit registers general used to store adresses so only the lowest (rightmost) 12 bits are usually used
-    // TODO: delay + sound registers
-    u16 pc; // program counter
-    u8 sp;  // stack pointer
-};
+    // u16 stack[16];
+    // u8 v[16]; // 16 general purpose 8-bit registers
+    // u16 i;    // 16-bit registers general used to store adresses so only the lowest (rightmost) 12 bits are usually used
+    // // TODO: delay + sound registers
+    // u16 pc; // program counter
+    // u8 sp;  // stack pointer
+} CHIP8;
+
+u8 mem_read_u8(CHIP8 *, u16);
+
+void mem_write_u8(CHIP8 *, u16, u8);
+
+u16 mem_read_u16(CHIP8 *, u16);
+
+void mem_write_u16(CHIP8 *, u16, u16);
+
+u16 fetchOpcode(CHIP8 *);
 
 /// @brief CHIP-8's common built-in font. Stored in 0x50 - 0x9F
 const u8 font[16][16] = {
