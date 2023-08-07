@@ -30,11 +30,11 @@ CHIP8 *CHIP8_new()
     // TODO: init delay, sound, pc, sp
 
     // Store built-in font in 0x50 - 0x9F
-    for (size_t i = 0; i < 16; i++)
+    for (size_t letter = 0; letter < 16; letter++)
     {
-        for (size_t j = 0; j < 5; j++)
+        for (size_t byte = 0; byte < 5; byte++)
         {
-            write_u8(cpu, (u16)(0x50 + i * 5 + j), font[i][j]);
+            write_u8(cpu, (u16)(0x50 + letter * 5 + byte), font[letter][byte]);
         }
     }
 
