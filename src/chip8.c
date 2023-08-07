@@ -37,5 +37,3 @@ void CHIP8_destroy(CHIP8 *cpu)
     free(cpu->ram);
     free(cpu);
 }
-
-

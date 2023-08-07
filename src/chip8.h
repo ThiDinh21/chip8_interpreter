@@ -46,12 +46,12 @@ typedef struct Chip8
 CHIP8 *CHIP8_new();
 
 /// @brief CHIP8's destructor, will free allocated memory for the RAM
-/// @param cpu - a pointer to the CHIP8 that need to be freed
+/// @param cpu a pointer to the CHIP8 that need to be freed
 void CHIP8_destroy(CHIP8 *cpu);
 
 /// @brief Read the byte at the address in the RAM of the CPU
-/// @param cpu - a pointer to the CPU
-/// @param addr - address of the data
+/// @param cpu a pointer to the CPU
+/// @param addr address of the data
 /// @return a byte read from RAM
 inline u8 read_u8(CHIP8 *cpu, u16 addr)
 {
@@ -59,17 +59,17 @@ inline u8 read_u8(CHIP8 *cpu, u16 addr)
 }
 
 /// @brief Write a byte to the CPU's RAM at the adress
-/// @param cpu - a pointer to the CPU
-/// @param addr - address of the data
-/// @param data - data to be writen
+/// @param cpu a pointer to the CPU
+/// @param addr address of the data
+/// @param data data to be writen
 inline void write_u8(CHIP8 *cpu, u16 addr, u8 data)
 {
     cpu->ram[addr] = data;
 }
 
 /// @brief Read the byte and the one after that (big-edian) at the address in the RAM of the CPU
-/// @param cpu - a pointer to the CPU
-/// @param addr - address of the data
+/// @param cpu a pointer to the CPU
+/// @param addr address of the data
 /// @return 2 bytes read from RAM in big-edian
 inline u16 read_u16(CHIP8 *cpu, u16 addr)
 {
@@ -80,9 +80,9 @@ inline u16 read_u16(CHIP8 *cpu, u16 addr)
 }
 
 /// @brief Write 2 bytes (big-edian) to the CPU's RAM at the adress
-/// @param cpu - a pointer to the CPU
-/// @param addr - address of the data
-/// @param data - data to be writen
+/// @param cpu a pointer to the CPU
+/// @param addr address of the data
+/// @param data data to be writen
 inline void write_u16(CHIP8 *cpu, u16 addr, u16 data)
 {
     u8 msb = data >> 8;
@@ -93,7 +93,7 @@ inline void write_u16(CHIP8 *cpu, u16 addr, u16 data)
 }
 
 /// @brief Read the next opcode from the library and increment the PC by 2
-/// @param cpu - a pointer to the CPU
+/// @param cpu a pointer to the CPU
 /// @return the opcode as an u16
 inline u16 fetch_opcode(CHIP8 *cpu)
 {
