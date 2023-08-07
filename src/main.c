@@ -1,10 +1,15 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <errno.h>
+#include <SDL2/SDL.h>
 #include "chip8.h"
 
 int main()
 {
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+    {
+        fprintf(stderr, "Failed to initialize SDL2: %s\n", SDL_GetError());
+    }
+
     CHIP8 *cpu = CHIP8_new();
     // cpu->pc = 0x55;
 
