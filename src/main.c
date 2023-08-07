@@ -11,8 +11,11 @@ int main()
     printf("%x, %x\n", fetch_opcode(cpu), cpu->pc);
     printf("%x, %x\n", fetch_opcode(cpu), cpu->pc);
     printf("%x, %x\n", fetch_opcode(cpu), cpu->pc);
+    printf("%x, %x\n", fetch_opcode(cpu), cpu->pc);
 
     CHIP8_destroy(cpu);
+
+    // printf("Makefile is shit!");
 
     return 0;
 }
