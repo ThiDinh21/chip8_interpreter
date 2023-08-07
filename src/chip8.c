@@ -2,7 +2,7 @@
 #include <string.h>
 #include "chip8.h"
 
-const u8 font[16][16] = {
+const u8 font[16][5] = {
     {0xF0, 0x90, 0x90, 0x90, 0xF0}, //  0
     {0x20, 0x60, 0x20, 0x20, 0x70}, //  1
     {0xF0, 0x10, 0xF0, 0x80, 0xF0}, //  2
@@ -28,6 +28,15 @@ CHIP8 *CHIP8_new()
     memset(cpu->v, 0, sizeof(cpu->v));
     memset(cpu->stack, 0, sizeof(cpu->stack));
     // TODO: init delay, sound, pc, sp
+
+    // Store built-in font in 0x50 - 0x9F
+    for (size_t i = 0; i < 16; i++)
+    {
+        for (size_t j = 0; j < 5; j++)
+        {
+            write_u8(cpu, (u16)(0x50 + i * 5 + j), font[i][j]);
+        }
+    }
 
     return cpu;
 }

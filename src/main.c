@@ -7,7 +7,7 @@ int main()
 {
     CHIP8 *cpu = CHIP8_new();
 
-    printf("%d", cpu->v[5]);
+    printf("%x", read_u8(cpu, 0x0055));
 
     CHIP8_destroy(cpu);
 

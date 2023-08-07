@@ -103,6 +103,6 @@ static inline u16 fetch_opcode(CHIP8 *cpu)
 }
 
 /// @brief CHIP-8's common built-in font. Stored in 0x50 - 0x9F
-extern const u8 font[16][16];
+extern const u8 font[16][5];
 
 #endif
