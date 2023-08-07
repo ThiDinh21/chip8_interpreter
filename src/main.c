@@ -6,8 +6,11 @@
 int main()
 {
     CHIP8 *cpu = CHIP8_new();
+    cpu->pc = 0x55;
 
-    printf("%x", read_u8(cpu, 0x0055));
+    printf("%x, %x\n", fetch_opcode(cpu), cpu->pc);
+    printf("%x, %x\n", fetch_opcode(cpu), cpu->pc);
+    printf("%x, %x\n", fetch_opcode(cpu), cpu->pc);
 
     CHIP8_destroy(cpu);
 
