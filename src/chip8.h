@@ -53,27 +53,27 @@ void CHIP8_destroy(CHIP8 *cpu);
 /// @param cpu - a pointer to the CPU
 /// @param addr - address of the data
 /// @return a byte read from RAM
-u8 mem_read_u8(CHIP8 *cpu, u16 addr);
+u8 read_u8(CHIP8 *cpu, u16 addr);
 
 /// @brief Write a byte to the CPU's RAM at the adress
 /// @param cpu - a pointer to the CPU
 /// @param addr - address of the data
 /// @param data - data to be writen
-void mem_write_u8(CHIP8 *cpu, u16 addr, u8 data);
+void write_u8(CHIP8 *cpu, u16 addr, u8 data);
 
 /// @brief Read the byte and the one after that (big-edian) at the address in the RAM of the CPU
 /// @param cpu - a pointer to the CPU
 /// @param addr - address of the data
 /// @return 2 bytes read from RAM in big-edian
-u16 mem_read_u16(CHIP8 *cpu, u16 addr);
+u16 read_u16(CHIP8 *cpu, u16 addr);
 
 /// @brief Write 2 bytes (big-edian) to the CPU's RAM at the adress
 /// @param cpu - a pointer to the CPU
 /// @param addr - address of the data
 /// @param data - data to be writen
-void mem_write_u16(CHIP8 *cpu, u16 addr, u16 data);
+void write_u16(CHIP8 *cpu, u16 addr, u16 data);
 
-u16 fetchOpcode(CHIP8 *cpu);
+u16 fetch_opcode(CHIP8 *cpu);
 
 /// @brief CHIP-8's common built-in font. Stored in 0x50 - 0x9F
 extern const u8 font[16][16];
