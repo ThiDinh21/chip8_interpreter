@@ -41,6 +41,9 @@ typedef struct Chip8
     u8 sp;  // stack pointer
 } CHIP8;
 
+/// @brief CHIP-8's common built-in font. Stored in 0x50 - 0x9F
+extern const u8 font[16][5];
+
 /// @brief CHIP8's constructor, will allocate memory for the CPU's RAM
 /// @return a pointer to the newly created struct
 CHIP8 *CHIP8_new();
@@ -50,7 +53,7 @@ CHIP8 *CHIP8_new();
 void CHIP8_destroy(CHIP8 *cpu);
 
 /// @brief Read the byte at the address in the RAM of the CPU
-/// @param cpu a pointer to the CPU
+/// @param cpu a pointer of type CHIP8 *
 /// @param addr address of the data
 /// @return a byte read from RAM
 static inline u8 read_u8(CHIP8 *cpu, u16 addr)
@@ -59,7 +62,7 @@ static inline u8 read_u8(CHIP8 *cpu, u16 addr)
 }
 
 /// @brief Write a byte to the CPU's RAM at the adress
-/// @param cpu a pointer to the CPU
+/// @param cpu a pointer of type CHIP8 *
 /// @param addr address of the data
 /// @param data data to be writen
 static inline void write_u8(CHIP8 *cpu, u16 addr, u8 data)
@@ -68,7 +71,7 @@ static inline void write_u8(CHIP8 *cpu, u16 addr, u8 data)
 }
 
 /// @brief Read the byte and the one after that (big-edian) at the address in the RAM of the CPU
-/// @param cpu a pointer to the CPU
+/// @param cpu a pointer of type CHIP8 *
 /// @param addr address of the data
 /// @return 2 bytes read from RAM in big-edian
 static inline u16 read_u16(CHIP8 *cpu, u16 addr)
@@ -80,7 +83,7 @@ static inline u16 read_u16(CHIP8 *cpu, u16 addr)
 }
 
 /// @brief Write 2 bytes (big-edian) to the CPU's RAM at the adress
-/// @param cpu a pointer to the CPU
+/// @param cpu a pointer of type CHIP8 *
 /// @param addr address of the data
 /// @param data data to be writen
 static inline void write_u16(CHIP8 *cpu, u16 addr, u16 data)
@@ -93,7 +96,7 @@ static inline void write_u16(CHIP8 *cpu, u16 addr, u16 data)
 }
 
 /// @brief Read the next opcode from the library and increment the PC by 2
-/// @param cpu a pointer to the CPU
+/// @param cpu a pointer of type CHIP8 *
 /// @return the opcode as an u16
 static inline u16 fetch_opcode(CHIP8 *cpu)
 {
@@ -101,8 +104,5 @@ static inline u16 fetch_opcode(CHIP8 *cpu)
     cpu->pc += 2;
     return opcode;
 }
-
-/// @brief CHIP-8's common built-in font. Stored in 0x50 - 0x9F
-extern const u8 font[16][5];
 
 #endif
