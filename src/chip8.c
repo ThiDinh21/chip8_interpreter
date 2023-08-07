@@ -46,3 +46,74 @@ void CHIP8_destroy(CHIP8 *cpu)
     free(cpu->ram);
     free(cpu);
 }
+
+void decode(CHIP8 *cpu, u16 opcode)
+{
+    u8 firstNibble = (opcode & 0xF000) >> 12;
+
+    switch (firstNibble)
+    {
+    case 0:
+        if (opcode == 0x00E0)
+        {
+            // TODO: CLS
+        }
+        else if (opcode == 00E0)
+        {
+            // TODO: RET
+        }
+        else
+        {
+            // TODO: 0nnn
+        }
+        break;
+    case 1:
+        // TODO: 1nnn
+        break;
+    case 2:
+        // TODO: 2nnn
+        break;
+    case 3:
+        // TODO: 3xkk
+        break;
+    case 4:
+        // TODO: 4xkk
+        break;
+    case 5:
+        // TODO: 5xy0
+        break;
+    case 6:
+        // TODO: 6xkk
+        break;
+    case 7:
+        // TODO: 7xkk
+        break;
+    case 8:
+        // TODO: 8 stuffs
+        break;
+    case 9:
+        // TODO: 9xy0
+        break;
+    case 0xA:
+        /* code */
+        break;
+    case 0xB:
+        /* code */
+        break;
+    case 0xC:
+        /* code */
+        break;
+    case 0xD:
+        /* ode */
+        break;
+    case 0xE:
+        /* code */
+        break;
+    case 0xF:
+        /* code */
+        break;
+
+    default:
+        break;
+    }
+}

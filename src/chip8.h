@@ -105,4 +105,6 @@ static inline u16 fetch_opcode(CHIP8 *cpu)
     return opcode;
 }
 
+void decode(CHIP8 *cpu, u16 opcode);
+
 #endif
