@@ -53,25 +53,44 @@ void CHIP8_destroy(CHIP8 *cpu);
 /// @param cpu - a pointer to the CPU
 /// @param addr - address of the data
 /// @return a byte read from RAM
-u8 read_u8(CHIP8 *cpu, u16 addr);
+inline u8 read_u8(CHIP8 *cpu, u16 addr)
+{
+    return cpu->ram[addr];
+}
 
 /// @brief Write a byte to the CPU's RAM at the adress
 /// @param cpu - a pointer to the CPU
 /// @param addr - address of the data
 /// @param data - data to be writen
-void write_u8(CHIP8 *cpu, u16 addr, u8 data);
+inline void write_u8(CHIP8 *cpu, u16 addr, u8 data)
+{
+    cpu->ram[addr] = data;
+}
 
 /// @brief Read the byte and the one after that (big-edian) at the address in the RAM of the CPU
 /// @param cpu - a pointer to the CPU
 /// @param addr - address of the data
 /// @return 2 bytes read from RAM in big-edian
-u16 read_u16(CHIP8 *cpu, u16 addr);
+inline u16 read_u16(CHIP8 *cpu, u16 addr)
+{
+    u8 msb = read_u8(cpu, addr);
+    u8 lsb = read_u8(cpu, addr + 1);
+
+    return ((u16)msb << 8) | lsb;
+}
 
 /// @brief Write 2 bytes (big-edian) to the CPU's RAM at the adress
 /// @param cpu - a pointer to the CPU
 /// @param addr - address of the data
 /// @param data - data to be writen
-void write_u16(CHIP8 *cpu, u16 addr, u16 data);
+inline void write_u16(CHIP8 *cpu, u16 addr, u16 data)
+{
+    u8 msb = data >> 8;
+    u8 lsb = data;
+
+    write_u8(cpu, addr, msb);
+    write_u8(cpu, addr + 1, lsb);
+}
 
 u16 fetch_opcode(CHIP8 *cpu);
 
