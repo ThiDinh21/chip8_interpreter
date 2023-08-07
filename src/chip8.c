@@ -39,7 +39,3 @@ void CHIP8_destroy(CHIP8 *cpu)
 }
 
 
-
-
-
-

@@ -92,7 +92,15 @@ inline void write_u16(CHIP8 *cpu, u16 addr, u16 data)
     write_u8(cpu, addr + 1, lsb);
 }
 
-u16 fetch_opcode(CHIP8 *cpu);
+/// @brief Read the next opcode from the library and increment the PC by 2
+/// @param cpu - a pointer to the CPU
+/// @return the opcode as an u16
+inline u16 fetch_opcode(CHIP8 *cpu)
+{
+    u16 opcode = read_u16(cpu, cpu->pc);
+    cpu->pc += 2;
+    return opcode;
+}
 
 /// @brief CHIP-8's common built-in font. Stored in 0x50 - 0x9F
 extern const u8 font[16][16];
