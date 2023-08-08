@@ -53,10 +53,23 @@ void CHIP8_destroy(CHIP8 *cpu)
 void decode(SDL_Renderer *renderer, CHIP8 *cpu, u16 opcode)
 {
     u8 firstNibble = (opcode & 0xF000) >> 12;
+    // nnn or addr - A 12-bit value, the lowest 12 bits of the instruction
+    // n or nibble - A 4-bit value, the lowest 4 bits of the instruction
+    // x - A 4-bit value, the lower 4 bits of the high byte of the instruction
+    // y - A 4-bit value, the upper 4 bits of the low byte of the instruction
+    // kk or byte - An 8-bit value, the lowest 8 bits of the instruction
+    u16 nnn = opcode & 0x0FFF;
+    u8 n = opcode & 0x000F;
+    u8 x = (opcode & 0x0F00) >> 8;
+    u8 y = (opcode & 0x00F0) >> 4;
+    u8 kk = opcode & 0x00FF;
+
+    // printf("nnn: %x; n: %x; x: %x; y: %x; kk: %x", nnn, n, x, y, kk);
 
     switch (firstNibble)
     {
     case 0:
+        // 00E0 - CLS
         if (opcode == 0x00E0)
         {
             cls(renderer);
@@ -71,7 +84,8 @@ void decode(SDL_Renderer *renderer, CHIP8 *cpu, u16 opcode)
         }
         break;
     case 1:
-        // TODO: 1nnn
+        // 1nnn - JUMP
+
         break;
     case 2:
         // TODO: 2nnn
