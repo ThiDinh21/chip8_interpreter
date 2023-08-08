@@ -85,7 +85,7 @@ void decode(SDL_Renderer *renderer, CHIP8 *cpu, u16 opcode)
         break;
     case 1:
         // 1nnn - JUMP
-
+        cpu->pc = nnn;
         break;
     case 2:
         // TODO: 2nnn
