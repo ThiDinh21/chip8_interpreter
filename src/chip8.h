@@ -2,6 +2,7 @@
 #define CHIP8_H
 
 #include <stdint.h>
+#include <SDL2/SDL.h>
 
 typedef uint8_t u8;
 typedef uint16_t u16;
@@ -105,6 +106,6 @@ static inline u16 fetch_opcode(CHIP8 *cpu)
     return opcode;
 }
 
-void decode(CHIP8 *cpu, u16 opcode);
+void decode(SDL_Renderer *renderer, CHIP8 *cpu, u16 opcode);
 
 #endif

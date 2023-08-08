@@ -22,6 +22,8 @@ const u8 font[16][5] = {
     {0xF0, 0x80, 0xF0, 0x80, 0x80}, //  F
 };
 
+void cls(SDL_Renderer *renderer);
+
 CHIP8 *CHIP8_new()
 {
     CHIP8 *cpu = calloc(61, sizeof(u8));
@@ -48,7 +50,7 @@ void CHIP8_destroy(CHIP8 *cpu)
     free(cpu);
 }
 
-void decode(CHIP8 *cpu, u16 opcode)
+void decode(SDL_Renderer *renderer, CHIP8 *cpu, u16 opcode)
 {
     u8 firstNibble = (opcode & 0xF000) >> 12;
 
@@ -57,7 +59,7 @@ void decode(CHIP8 *cpu, u16 opcode)
     case 0:
         if (opcode == 0x00E0)
         {
-            // TODO: CLS
+            cls(renderer);
         }
         else if (opcode == 00E0)
         {
@@ -117,4 +119,11 @@ void decode(CHIP8 *cpu, u16 opcode)
     default:
         break;
     }
+}
+
+void cls(SDL_Renderer *renderer)
+{
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
 }
