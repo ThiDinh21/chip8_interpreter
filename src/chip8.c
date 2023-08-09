@@ -2,6 +2,11 @@
 #include <string.h>
 #include <SDL2/SDL.h>
 #include "chip8.h"
+#include "graphics.h"
+
+#define Vx cpu->v[x]
+#define Vy cpu->v[y]
+#define I cpu->i
 
 const u8 font[16][5] = {
     {0xF0, 0x90, 0x90, 0x90, 0xF0}, //  0
@@ -21,8 +26,6 @@ const u8 font[16][5] = {
     {0xF0, 0x80, 0xF0, 0x80, 0xF0}, //  E
     {0xF0, 0x80, 0xF0, 0x80, 0x80}, //  F
 };
-
-void cls(SDL_Renderer *renderer);
 
 CHIP8 *CHIP8_new()
 {
@@ -50,7 +53,7 @@ void CHIP8_destroy(CHIP8 *cpu)
     free(cpu);
 }
 
-void decode(SDL_Renderer *renderer, CHIP8 *cpu, u16 opcode)
+void decode(SDL_Renderer *renderer, SDL_Surface *surface, CHIP8 *cpu, u16 opcode)
 {
     u8 firstNibble = (opcode & 0xF000) >> 12;
     // nnn or addr - A 12-bit value, the lowest 12 bits of the instruction
@@ -64,6 +67,7 @@ void decode(SDL_Renderer *renderer, CHIP8 *cpu, u16 opcode)
     u8 y = (opcode & 0x00F0) >> 4;
     u8 kk = opcode & 0x00FF;
 
+    u8 sprite[n];
     // printf("nnn: %x; n: %x; x: %x; y: %x; kk: %x", nnn, n, x, y, kk);
 
     switch (firstNibble)
@@ -100,10 +104,12 @@ void decode(SDL_Renderer *renderer, CHIP8 *cpu, u16 opcode)
         // TODO: 5xy0
         break;
     case 6:
-        // TODO: 6xkk
+        // 6xkk - LD Vx, kk
+        Vx = kk;
         break;
     case 7:
-        // TODO: 7xkk
+        // 7xkk - ADD Vx, kk
+        Vx += kk;
         break;
     case 8:
         // TODO: 8 stuffs
@@ -112,7 +118,8 @@ void decode(SDL_Renderer *renderer, CHIP8 *cpu, u16 opcode)
         // TODO: 9xy0
         break;
     case 0xA:
-        /* code */
+        // Annn - LD I, addr
+        I = nnn;
         break;
     case 0xB:
         /* code */
@@ -121,7 +128,13 @@ void decode(SDL_Renderer *renderer, CHIP8 *cpu, u16 opcode)
         /* code */
         break;
     case 0xD:
-        /* ode */
+        // Dxyn - DRW Vx, Vy, nibble
+        for (size_t i = 0; i < n; i++)
+        {
+            sprite[i] = read_u8(cpu, I + (u16)i);
+        }
+        cpu->v[0xF] = drawSprite(renderer, surface, sprite, n, Vx, Vy);
+
         break;
     case 0xE:
         /* code */
@@ -133,11 +146,4 @@ void decode(SDL_Renderer *renderer, CHIP8 *cpu, u16 opcode)
     default:
         break;
     }
-}
-
-void cls(SDL_Renderer *renderer)
-{
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
 }

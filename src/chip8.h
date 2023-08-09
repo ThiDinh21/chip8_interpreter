@@ -106,6 +106,6 @@ static inline u16 fetch_opcode(CHIP8 *cpu)
     return opcode;
 }
 
-void decode(SDL_Renderer *renderer, CHIP8 *cpu, u16 opcode);
+void decode(SDL_Renderer *renderer, SDL_Surface *surface, CHIP8 *cpu, u16 opcode);
 
 #endif

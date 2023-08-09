@@ -25,19 +25,28 @@ int main()
         return 1;
     }
 
+    SDL_Surface *surface = SDL_GetWindowSurface(window);
+
     CHIP8 *cpu = CHIP8_new();
 
     SDL_Event event;
     int quit = 0;
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
 
     while (!quit)
     {
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_QUIT)
+            {
                 quit = 1;
-            break;
+                break;
+            }
         }
+
+                u8 sprite[5] = {0x10, 0xFF, 0xAF, 0x00, 0x10};
+        drawSprite(renderer, surface, sprite, 5, 30, 20);
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
