@@ -11,6 +11,10 @@ static SDL_Window *window;
 static SDL_Renderer *renderer;
 static SDL_Surface *surface;
 
+void initSDL(void);
+
+void destroySDL(void);
+
 void cls(SDL_Renderer *renderer);
 
 u8 getPixel(SDL_Surface *surface, u8 x, u8 y);
