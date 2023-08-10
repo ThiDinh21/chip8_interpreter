@@ -76,7 +76,7 @@ void decode(SDL_Renderer *renderer, SDL_Surface *surface, CHIP8 *cpu, u16 opcode
         // 00E0 - CLS
         if (opcode == 0x00E0)
         {
-            cls(renderer);
+            cls();
         }
         else if (opcode == 00E0)
         {
@@ -133,7 +133,7 @@ void decode(SDL_Renderer *renderer, SDL_Surface *surface, CHIP8 *cpu, u16 opcode
         {
             sprite[i] = read_u8(cpu, I + (u16)i);
         }
-        cpu->v[0xF] = drawSprite(renderer, surface, sprite, n, Vx, Vy);
+        cpu->v[0xF] = drawSprite(sprite, n, Vx, Vy);
 
         break;
     case 0xE:

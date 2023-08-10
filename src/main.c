@@ -2,37 +2,15 @@
 #include <stdint.h>
 #include <SDL2/SDL.h>
 #include "chip8.h"
+#include "graphics.h"
 
 int main()
 {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-    {
-        fprintf(stderr, "Failed to initialize SDL2: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    SDL_Window *window = SDL_CreateWindow("CHIP-8 Interpreter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 320, SDL_WINDOW_SHOWN);
-    if (!window)
-    {
-        fprintf(stderr, "Failed to create window: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer)
-    {
-        fprintf(stderr, "Failed to create renderer: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    SDL_Surface *surface = SDL_GetWindowSurface(window);
+    initSDL();
 
     CHIP8 *cpu = CHIP8_new();
-
     SDL_Event event;
     int quit = 0;
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
 
     while (!quit)
     {
@@ -45,19 +23,12 @@ int main()
             }
         }
 
-                u8 sprite[5] = {0x10, 0xFF, 0xAF, 0x00, 0x10};
-        drawSprite(renderer, surface, sprite, 5, 30, 20);
-
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-
-        SDL_RenderPresent(renderer);
+        testSDL();
+        break;
     }
 
     // Clean up SDL
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+    destroySDL();
 
     CHIP8_destroy(cpu);
 
