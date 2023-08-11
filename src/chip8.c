@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <string.h>
-#include <SDL2/SDL.h>
 #include "chip8.h"
 #include "graphics.h"
 
@@ -53,7 +52,16 @@ void CHIP8_destroy(CHIP8 *cpu)
     free(cpu);
 }
 
-void decode(SDL_Renderer *renderer, SDL_Surface *surface, CHIP8 *cpu, u16 opcode)
+void eventLoop(CHIP8 *cpu)
+{
+    while (1)
+    {
+        u16 opcode = fetch_opcode(cpu);
+        decode(cpu, opcode);
+    }
+}
+
+void decode(CHIP8 *cpu, u16 opcode)
 {
     u8 firstNibble = (opcode & 0xF000) >> 12;
     // nnn or addr - A 12-bit value, the lowest 12 bits of the instruction

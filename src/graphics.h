@@ -15,4 +15,8 @@ void destroySDL(void);
 
 void testSDL(void);
 
+void cls(void);
+
+u8 drawSprite(u8 *sprite, u8 n, u8 x, u8 y);
+
 #endif

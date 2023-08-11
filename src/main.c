@@ -4,33 +4,55 @@
 #include "chip8.h"
 #include "graphics.h"
 
-int main()
+u8 *readROM(char *path);
+
+int main(int argc, char **argv)
 {
     initSDL();
 
     CHIP8 *cpu = CHIP8_new();
-    SDL_Event event;
-    int quit = 0;
 
-    while (!quit)
+    if (argc < 2)
     {
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-            {
-                quit = 1;
-                break;
-            }
-        }
+        fprintf(stderr, "Missing argument: Path to ROM");
+        return -1;
+    }
 
-        testSDL();
-        break;
+    char *pathToROM = argv[1];
+    u8 *rom = readROM(pathToROM);
+
+    if (rom == NULL)
+    {
+        fprintf(stderr, "File does not exist");
+        return -1;
     }
 
     // Clean up SDL
     destroySDL();
 
     CHIP8_destroy(cpu);
+    free(rom);
 
     return 0;
+}
+
+u8 *readROM(char *path)
+{
+    FILE *fptr;
+    fptr = fopen(path, "rb");
+    u8 *buffer;
+    long len;
+
+    if (fptr == NULL)
+        return NULL;
+
+    fseek(fptr, 0, SEEK_END); // Jump to EOF
+    len = ftell(fptr);        // Get the cuurent byte offset
+    rewind(fptr);             // Jump back to the beginning of file
+    buffer = (u8 *)malloc(len);
+
+    fread(buffer, len, 1, fptr);
+    fclose(fptr);
+
+    return buffer;
 }
