@@ -46,8 +46,10 @@ typedef struct Chip8
 extern const u8 font[16][5];
 
 /// @brief CHIP8's constructor, will allocate memory for the CPU's RAM
+/// @param rom a byte array represent the chip8 program
+/// @param romSize length of the rom array
 /// @return a pointer to the newly created struct
-CHIP8 *CHIP8_new();
+CHIP8 *CHIP8_new(u8 *rom, long romSize);
 
 /// @brief CHIP8's destructor, will free allocated memory for the RAM
 /// @param cpu a pointer to the CHIP8 that need to be freed

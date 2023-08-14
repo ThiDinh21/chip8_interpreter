@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "chip8.h"
 #include "graphics.h"
 
@@ -26,22 +27,28 @@ const u8 font[16][5] = {
     {0xF0, 0x80, 0xF0, 0x80, 0x80}, //  F
 };
 
-CHIP8 *CHIP8_new()
+CHIP8 *CHIP8_new(u8 *rom, long romSize)
 {
     CHIP8 *cpu = calloc(61, sizeof(u8));
     cpu->ram = calloc(4096, sizeof(u8));
     memset(cpu->v, 0, sizeof(cpu->v));
     memset(cpu->stack, 0, sizeof(cpu->stack));
-    // TODO: init delay, sound, pc, sp
+    // TODO: init delay, sound
+
+    cpu->sp = 0;
+    cpu->pc = 0x0200;
 
     // Store built-in font in 0x50 - 0x9F
-    for (size_t letter = 0; letter < 16; letter++)
+    for (size_t character = 0; character < 16; character++)
     {
         for (size_t byte = 0; byte < 5; byte++)
         {
-            write_u8(cpu, (u16)(0x50 + letter * 5 + byte), font[letter][byte]);
+            write_u8(cpu, (u16)(0x50 + character * 5 + byte), font[character][byte]);
         }
     }
+
+    // Copy program ROM to RAM
+    memcpy(cpu->ram + 0x200, rom, romSize);
 
     return cpu;
 }
@@ -76,7 +83,7 @@ void decode(CHIP8 *cpu, u16 opcode)
     u8 kk = opcode & 0x00FF;
 
     u8 sprite[n];
-    // printf("nnn: %x; n: %x; x: %x; y: %x; kk: %x", nnn, n, x, y, kk);
+    // printf("nnn: %x; n: %x; x: %x; y: %x; kk: %x\n", nnn, n, x, y, kk);
 
     switch (firstNibble)
     {
@@ -86,7 +93,7 @@ void decode(CHIP8 *cpu, u16 opcode)
         {
             cls();
         }
-        else if (opcode == 00E0)
+        else if (opcode == 0x00E0)
         {
             // TODO: RET
         }
@@ -141,6 +148,7 @@ void decode(CHIP8 *cpu, u16 opcode)
         {
             sprite[i] = read_u8(cpu, I + (u16)i);
         }
+
         cpu->v[0xF] = drawSprite(sprite, n, Vx, Vy);
 
         break;
@@ -150,7 +158,6 @@ void decode(CHIP8 *cpu, u16 opcode)
     case 0xF:
         /* code */
         break;
-
     default:
         break;
     }

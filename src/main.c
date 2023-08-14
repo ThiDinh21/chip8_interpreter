@@ -4,14 +4,10 @@
 #include "chip8.h"
 #include "graphics.h"
 
-u8 *readROM(char *path);
+int getROMSize(FILE *fptr);
 
 int main(int argc, char **argv)
 {
-    initSDL();
-
-    CHIP8 *cpu = CHIP8_new();
-
     if (argc < 2)
     {
         fprintf(stderr, "Missing argument: Path to ROM");
@@ -19,40 +15,41 @@ int main(int argc, char **argv)
     }
 
     char *pathToROM = argv[1];
-    u8 *rom = readROM(pathToROM);
+    FILE *fptr;
+    fptr = fopen(pathToROM, "rb");
 
-    if (rom == NULL)
+    if (fptr == NULL)
     {
         fprintf(stderr, "File does not exist");
         return -1;
     }
 
-    // Clean up SDL
-    destroySDL();
+    int romSize = getROMSize(fptr);
+    u8 *rom = (u8 *)malloc(romSize);
+    fread(rom, romSize, 1, fptr);
+    CHIP8 *cpu = CHIP8_new(rom, romSize);
 
-    CHIP8_destroy(cpu);
+    fclose(fptr);
     free(rom);
+
+    // Create SDL Window
+    initSDL();
+
+    eventLoop(cpu);
+    // testSDL();
+
+    // Clean up
+    destroySDL();
+    CHIP8_destroy(cpu);
 
     return 0;
 }
 
-u8 *readROM(char *path)
+int getROMSize(FILE *fptr)
 {
-    FILE *fptr;
-    fptr = fopen(path, "rb");
-    u8 *buffer;
-    long len;
-
-    if (fptr == NULL)
-        return NULL;
-
+    int size;
     fseek(fptr, 0, SEEK_END); // Jump to EOF
-    len = ftell(fptr);        // Get the cuurent byte offset
+    size = ftell(fptr);       // Get the cuurent byte offset
     rewind(fptr);             // Jump back to the beginning of file
-    buffer = (u8 *)malloc(len);
-
-    fread(buffer, len, 1, fptr);
-    fclose(fptr);
-
-    return buffer;
+    return size;
 }

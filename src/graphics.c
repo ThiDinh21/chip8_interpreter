@@ -13,13 +13,36 @@ u8 drawSprite(u8 *sprite, u8 n, u8 x, u8 y);
 
 void testSDL(void)
 {
-    u8 sprite[5] = {0x11, 0x00, 0xF0, 0xFF};
+    // u8 sprite[5] = {0x11, 0x00, 0xF0, 0xFF};
 
-    drawSprite(sprite, sizeof(sprite) / sizeof(sprite[0]), 0, 20);
+    // 0xff, 0x0, 0xff, 0x0, 0x3c, 0x0, 0x3c, 0x0, 0x3c, 0x0, 0x3c, 0x0, 0xff, 0x0, 0xff,
+    // 0xff, 0x0, 0xff, 0x0, 0x38, 0x0, 0x3f, 0x0, 0x3f, 0x0, 0x38, 0x0, 0xff, 0x0, 0xff,
+    // 0x80, 0x0, 0xe0, 0x0, 0xe0, 0x0, 0x80, 0x0, 0x80, 0x0, 0xe0, 0x0, 0xe0, 0x0, 0x80,
+    // 0xf8, 0x0, 0xfc, 0x0, 0x3e, 0x0, 0x3f, 0x0, 0x3b, 0x0, 0x39, 0x0, 0xf8, 0x0, 0xf8,
+    // 0x3, 0x0, 0x7, 0x0, 0xf, 0x0, 0xbf, 0x0, 0xfb, 0x0, 0xf3, 0x0, 0xe3, 0x0, 0x43,
+    // 0xe0, 0x0, 0xe0, 0x0, 0x80, 0x0, 0x80, 0x0, 0x80, 0x0, 0x80, 0x0, 0xe0, 0x0, 0xe0,
 
-    SDL_RenderPresent(renderer);
+    u8 sprite[4] = {
+        // 0xff,
+        // 0x0,
+        // 0xff,
+        // 0x0,
+        // 0x38,
+        // 0x0,
+        0x3f,
+        0x0,
+        0x3f,
+        0x0,
+        // 0x38,
+        // 0x0,
+        // 0xff,
+        // 0x0,
+        // 0xff,
+    };
 
-    SDL_Delay(5000);
+    drawSprite(sprite, sizeof(sprite) / sizeof(sprite[0]), 0, 0);
+
+    SDL_Delay(10000);
 }
 
 void initSDL(void)
@@ -54,9 +77,7 @@ void initSDL(void)
     surface = SDL_GetWindowSurface(window);
 
     // Clear color texture
-    SDL_SetRenderTarget(renderer, texture);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
+    cls();
 }
 
 void destroySDL(void)
@@ -69,8 +90,11 @@ void destroySDL(void)
 
 void cls(void)
 {
+    SDL_SetRenderTarget(renderer, texture);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
 }
 
@@ -103,25 +127,25 @@ u8 drawSprite(u8 *sprite, u8 n, u8 x, u8 y)
         u8 spriteRow = sprite[row];
         for (size_t bit = 0; bit < 8; bit++)
         {
-            const u8 spritePixel = spriteRow & 0b00000001;
+            const u8 spritePixel = (spriteRow & 0b10000000) >> 7;
             const u8 pixel = getPixel((x + bit) * SCALE, (y + row) * SCALE);
             const u8 color = pixel ^ spritePixel ? 255 : 0;
 
             if (pixel == 1)
+            {
                 isCollided = 1;
+            } 
 
             SDL_SetRenderDrawColor(renderer, color, color, color, 255);
-            if (x + bit < 64 && y + row < 32)
-            {
-                SDL_RenderDrawPoint(renderer, x + bit, y + row);
-            }
+            SDL_RenderDrawPoint(renderer, (x + bit) % 64, (y + row) % 32);
 
-            spriteRow = spriteRow >> 1;
+            spriteRow = spriteRow << 1;
         }
     }
 
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderPresent(renderer);
 
     return isCollided;
 }
