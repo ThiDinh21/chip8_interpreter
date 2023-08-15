@@ -6,11 +6,9 @@ static SDL_Surface *surface;
 static SDL_Texture *texture;
 static u8 keyboard[16] = {0};
 
-void cls(void);
-
 u8 getPixel(u8 x, u8 y);
 
-u8 drawSprite(u8 *sprite, u8 n, u8 x, u8 y);
+static inline u8 getKeyValue(SDL_Scancode);
 
 void testSDL(void)
 {
@@ -149,9 +147,23 @@ u8 drawSprite(u8 *sprite, u8 n, u8 x, u8 y)
     return isCollided;
 }
 
-int getUserInterrupt(void)
+static inline u8 getKeyValue(SDL_Scancode code)
+{
+    for (u8 i = 0; i < 16; i++)
+    {
+        if (scancodeMap[i] == code)
+        {
+            return i;
+        }
+    }
+    return 16;
+}
+
+int handleUserInterrupt(void)
 {
     SDL_Event event;
+    SDL_Scancode scancode;
+    u8 key = 16;
 
     while (SDL_PollEvent(&event))
     {
@@ -160,7 +172,20 @@ int getUserInterrupt(void)
         case SDL_QUIT:
             return 1;
         case SDL_KEYDOWN:
-            printf("Lmao: %d\n", event.key.keysym.scancode);
+            scancode = event.key.keysym.scancode;
+            key = getKeyValue(scancode);
+            if (key < 16)
+            {
+                keyboard[key] = 1;
+            }
+            break;
+        case SDL_KEYUP:
+            scancode = event.key.keysym.scancode;
+            key = getKeyValue(scancode);
+            if (key < 16)
+            {
+                keyboard[key] = 0;
+            }
             break;
         default:
             break;
@@ -168,4 +193,9 @@ int getUserInterrupt(void)
     }
 
     return 0;
+}
+
+int getKeyboardState(u8 key)
+{
+    return keyboard[key];
 }

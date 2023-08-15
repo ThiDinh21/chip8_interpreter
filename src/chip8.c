@@ -70,7 +70,7 @@ void eventLoop(CHIP8 *cpu)
 {
     while (1)
     {
-        if (getUserInterrupt() == 1)
+        if (handleUserInterrupt() == 1)
         {
             break;
         }
