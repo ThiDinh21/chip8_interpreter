@@ -263,9 +263,45 @@ void decode(CHIP8 *cpu, u16 opcode)
                 PC += 2;
             }
         }
+        else
+        {
+            op_null(opcode);
+        }
         break;
     case 0xF:
-        /* code */
+        switch (kk)
+        {
+        case 0x07:
+
+            break;
+        case 0x0A:
+
+            break;
+        case 0x15:
+
+            break;
+        case 0x18:
+
+            break;
+        case 0x1E:
+
+            break;
+        case 0x29:
+
+            break;
+        case 0x33:
+
+            break;
+        case 0x55:
+
+            break;
+        case 0x65:
+
+            break;
+        default:
+            op_null(code);
+            break;
+        }
         break;
     default:
         op_null(opcode);
