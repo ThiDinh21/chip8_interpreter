@@ -241,7 +241,8 @@ void decode(CHIP8 *cpu, u16 opcode)
         I = nnn;
         break;
     case 0xB:
-        /* code */
+        // JP V0, addr
+        PC = (u16)cpu->v[0] + nnn;
         break;
     case 0xC:
         /* code */
