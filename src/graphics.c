@@ -4,6 +4,7 @@ static SDL_Window *window;
 static SDL_Renderer *renderer;
 static SDL_Surface *surface;
 static SDL_Texture *texture;
+static u8 keyboard[16] = {0};
 
 void cls(void);
 
@@ -112,8 +113,6 @@ u8 getPixel(u8 x, u8 y)
     u8 r, g, b;
     SDL_GetRGB(pixelData, surface->format, &r, &g, &b);
 
-    // printf("%d %d %d\n", r, g, b);
-
     return (r == 0 && g == 0 && b == 0) ? 0 : 1;
 }
 
@@ -134,7 +133,7 @@ u8 drawSprite(u8 *sprite, u8 n, u8 x, u8 y)
             if (pixel == 1)
             {
                 isCollided = 1;
-            } 
+            }
 
             SDL_SetRenderDrawColor(renderer, color, color, color, 255);
             SDL_RenderDrawPoint(renderer, (x + bit) % 64, (y + row) % 32);
@@ -148,4 +147,25 @@ u8 drawSprite(u8 *sprite, u8 n, u8 x, u8 y)
     SDL_RenderPresent(renderer);
 
     return isCollided;
+}
+
+int getUserInterrupt(void)
+{
+    SDL_Event event;
+
+    while (SDL_PollEvent(&event))
+    {
+        switch (event.type)
+        {
+        case SDL_QUIT:
+            return 1;
+        case SDL_KEYDOWN:
+            printf("Lmao: %d\n", event.key.keysym.scancode);
+            break;
+        default:
+            break;
+        }
+    }
+
+    return 0;
 }

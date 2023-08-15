@@ -70,6 +70,10 @@ void eventLoop(CHIP8 *cpu)
 {
     while (1)
     {
+        if (getUserInterrupt() == 1)
+        {
+            break;
+        }
         u16 opcode = fetch_opcode(cpu);
         decode(cpu, opcode);
     }
@@ -260,10 +264,10 @@ void decode(CHIP8 *cpu, u16 opcode)
         }
 
         VF = drawSprite(sprite, n, Vx, Vy);
-
         break;
     case 0xE:
-        /* code */
+        // Ex9E - SKP Vx
+
         break;
     case 0xF:
         /* code */
