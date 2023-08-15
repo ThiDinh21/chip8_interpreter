@@ -33,6 +33,9 @@ const u8 font[16][5] = {
 
 CHIP8 *CHIP8_new(u8 *rom, long romSize)
 {
+    // For Cxkk
+    srand(time(NULL));
+
     CHIP8 *cpu = calloc(61, sizeof(u8));
     cpu->ram = calloc(4096, sizeof(u8));
     memset(cpu->v, 0, sizeof(cpu->v));
@@ -247,7 +250,7 @@ void decode(CHIP8 *cpu, u16 opcode)
         break;
     case 0xC:
         // Cxkk - RND Vx, byte
-
+        Vx = (u8)(rand() % 255) & kk;
         break;
     case 0xD:
         // Dxyn - DRW Vx, Vy, nibble
