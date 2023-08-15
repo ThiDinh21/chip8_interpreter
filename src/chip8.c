@@ -150,14 +150,18 @@ void decode(CHIP8 *cpu, u16 opcode)
         }
         break;
     case 4:
-        // TODO: 4xkk
+        // 4xkk - SNE Vx, byte
         if (Vx != kk)
         {
             PC += 2;
         }
         break;
     case 5:
-        // TODO: 5xy0
+        // 5xy0 - SE Vx, Vy
+        if (Vx == Vy)
+        {
+            PC += 2;
+        }
         break;
     case 6:
         // 6xkk - LD Vx, kk
