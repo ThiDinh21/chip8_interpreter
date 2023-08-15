@@ -94,6 +94,12 @@ static inline u16 stack_pop(CHIP8 *cpu)
     return data;
 }
 
+void op_null(u16 opcode)
+{
+    fprintf(stderr, "Opcode not recognized: %x%\n", opcode);
+    exit(-1);
+}
+
 void decode(CHIP8 *cpu, u16 opcode)
 {
     u8 firstNibble = (opcode & 0xF000) >> 12;
@@ -131,6 +137,7 @@ void decode(CHIP8 *cpu, u16 opcode)
             // This instruction is only used on the old computers on
             // which Chip-8 was originally implemented.
             // It is ignored by modern interpreters.
+            op_null(opcode);
         }
         break;
     case 1:
@@ -172,7 +179,39 @@ void decode(CHIP8 *cpu, u16 opcode)
         Vx += kk;
         break;
     case 8:
-        // TODO: 8 stuffs
+        switch (n)
+        {
+        case 0x0:
+            /* code */
+            break;
+        case 0x1:
+            /* code */
+            break;
+        case 0x2:
+            /* code */
+            break;
+        case 0x3:
+            /* code */
+            break;
+        case 0x4:
+            /* code */
+            break;
+        case 0x5:
+            /* code */
+            break;
+        case 0x6:
+            /* code */
+            break;
+        case 0x7:
+            /* code */
+            break;
+        case 0xE:
+            /* code */
+            break;
+        default:
+            op_null(opcode);
+            break;
+        }
         break;
     case 9:
         // TODO: 9xy0
@@ -204,6 +243,7 @@ void decode(CHIP8 *cpu, u16 opcode)
         /* code */
         break;
     default:
+        op_null(opcode);
         break;
     }
 }
