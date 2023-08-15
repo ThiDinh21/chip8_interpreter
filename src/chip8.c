@@ -230,7 +230,11 @@ void decode(CHIP8 *cpu, u16 opcode)
         }
         break;
     case 9:
-        // TODO: 9xy0
+        // 9xy0 - SNE Vx, Vy
+        if (Vx != Vy)
+        {
+            PC += 2;
+        }
         break;
     case 0xA:
         // Annn - LD I, addr
