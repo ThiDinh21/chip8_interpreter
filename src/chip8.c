@@ -6,6 +6,7 @@
 
 #define Vx cpu->v[x]
 #define Vy cpu->v[y]
+#define VF cpu->v[0xF]
 #define I cpu->i
 #define PC cpu->pc
 #define SP cpu->sp
@@ -182,31 +183,46 @@ void decode(CHIP8 *cpu, u16 opcode)
         switch (n)
         {
         case 0x0:
-            /* code */
+            // 8xy0 - LD Vx, Vy
+            Vx = Vy;
             break;
         case 0x1:
-            /* code */
+            // 8xy1 - OR Vx, Vy
+            Vx |= Vy;
             break;
         case 0x2:
-            /* code */
+            // 8xy2 - AND Vx, Vy
+            Vx &= Vy;
             break;
         case 0x3:
-            /* code */
+            // 8xy3 - XOR Vx, Vy
+            Vx ^= Vy;
             break;
         case 0x4:
-            /* code */
+            // 8xy4 - ADD Vx, Vy
+            u8 sum = Vx + Vy;
+            VF = sum < Vx || sum < Vy;
+            Vx = sum;
             break;
         case 0x5:
-            /* code */
+            // 8xy5 - SUB Vx, Vy
+            VF = Vx > Vy;
+            Vx -= Vy;
             break;
         case 0x6:
-            /* code */
+            // 8xy6 - SHR Vx {, Vy}
+            VF = (Vx & 0b1) > 0;
+            Vx = Vx >> 1;
             break;
         case 0x7:
-            /* code */
+            // SUBN Vx, Vy
+            VF = Vy > Vx;
+            Vx = Vy - Vx;
             break;
         case 0xE:
-            /* code */
+            // SHL Vx {, Vy}
+            VF = (Vx & 0b10000000) > 0;
+            Vx = Vx << 1;
             break;
         default:
             op_null(opcode);
@@ -233,7 +249,7 @@ void decode(CHIP8 *cpu, u16 opcode)
             sprite[i] = read_u8(cpu, I + (u16)i);
         }
 
-        cpu->v[0xF] = drawSprite(sprite, n, Vx, Vy);
+        VF = drawSprite(sprite, n, Vx, Vy);
 
         break;
     case 0xE:
