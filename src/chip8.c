@@ -37,7 +37,7 @@ CHIP8 *CHIP8_new(u8 *rom, long romSize)
     memset(cpu->stack, 0, sizeof(cpu->stack));
     // TODO: init delay, sound
 
-    cpu->sp = 0;
+    SP = 0;
     cpu->pc = 0x0200;
 
     // Store built-in font in 0x50 - 0x9F
@@ -70,6 +70,30 @@ void eventLoop(CHIP8 *cpu)
     }
 }
 
+static inline void stack_push(CHIP8 *cpu, u16 data)
+{
+    SP++;
+    if (SP > 15)
+    {
+        fprintf(stderr, "Error: Stack overflow");
+        exit(-1);
+    }
+    cpu->stack[SP] = data;
+}
+
+static inline u16 stack_pop(CHIP8 *cpu)
+{
+    u16 data = cpu->stack[SP];
+    if (SP == 0)
+    {
+        fprintf(stderr, "Error: Stack underflow");
+        exit(-1);
+    }
+    SP--;
+
+    return data;
+}
+
 void decode(CHIP8 *cpu, u16 opcode)
 {
     u8 firstNibble = (opcode & 0xF000) >> 12;
@@ -98,8 +122,7 @@ void decode(CHIP8 *cpu, u16 opcode)
         // 00EE - RET
         else if (opcode == 0x00EE)
         {
-            PC = cpu->stack[SP];
-            SP--;
+            PC = stack_pop(cpu);
         }
         // 0nnn - SYS addr
         else
@@ -115,7 +138,8 @@ void decode(CHIP8 *cpu, u16 opcode)
         cpu->pc = nnn;
         break;
     case 2:
-        // TODO: 2nnn
+        // 2nnn - CALL addr
+
         break;
     case 3:
         // TODO: 3xkk
