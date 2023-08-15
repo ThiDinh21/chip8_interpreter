@@ -7,6 +7,8 @@
 #define Vx cpu->v[x]
 #define Vy cpu->v[y]
 #define I cpu->i
+#define PC cpu->pc
+#define SP cpu->sp
 
 const u8 font[16][5] = {
     {0xF0, 0x90, 0x90, 0x90, 0xF0}, //  0
@@ -93,13 +95,19 @@ void decode(CHIP8 *cpu, u16 opcode)
         {
             cls();
         }
-        else if (opcode == 0x00E0)
+        // 00EE - RET
+        else if (opcode == 0x00EE)
         {
-            // TODO: RET
+            PC = cpu->stack[SP];
+            SP--;
         }
+        // 0nnn - SYS addr
         else
         {
-            // TODO: 0nnn
+            // Jump to a machine code routine at nnn.
+            // This instruction is only used on the old computers on
+            // which Chip-8 was originally implemented.
+            // It is ignored by modern interpreters.
         }
         break;
     case 1:
