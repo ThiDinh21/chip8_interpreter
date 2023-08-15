@@ -248,7 +248,21 @@ void decode(CHIP8 *cpu, u16 opcode)
         break;
     case 0xE:
         // Ex9E - SKP Vx
-
+        if (kk == 0x9E)
+        {
+            if (getKeyboardState(Vx) == 1)
+            {
+                PC += 2;
+            }
+        }
+        // ExA1 - SKNP Vx
+        else if (kk == 0xA1)
+        {
+            if (getKeyboardState(Vx) == 0)
+            {
+                PC += 2;
+            }
+        }
         break;
     case 0xF:
         /* code */
