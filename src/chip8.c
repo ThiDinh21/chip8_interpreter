@@ -139,7 +139,8 @@ void decode(CHIP8 *cpu, u16 opcode)
         break;
     case 2:
         // 2nnn - CALL addr
-
+        stack_push(cpu, PC);
+        PC = nnn;
         break;
     case 3:
         // TODO: 3xkk
