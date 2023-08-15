@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
+#include <time.h>
+
 #include "chip8.h"
 #include "graphics.h"
 
@@ -97,7 +98,7 @@ static inline u16 stack_pop(CHIP8 *cpu)
 
 void op_null(u16 opcode)
 {
-    fprintf(stderr, "Opcode not recognized: %x%\n", opcode);
+    fprintf(stderr, "Opcode not recognized: %x\n", opcode);
     exit(-1);
 }
 
@@ -245,7 +246,8 @@ void decode(CHIP8 *cpu, u16 opcode)
         PC = (u16)cpu->v[0] + nnn;
         break;
     case 0xC:
-        /* code */
+        // Cxkk - RND Vx, byte
+
         break;
     case 0xD:
         // Dxyn - DRW Vx, Vy, nibble

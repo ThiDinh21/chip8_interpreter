@@ -2,7 +2,6 @@
 #define CHIP8_H
 
 #include <stdint.h>
-#include <SDL2/SDL.h>
 
 typedef uint8_t u8;
 typedef uint16_t u16;
