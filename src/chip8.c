@@ -267,11 +267,11 @@ void decode(CHIP8 *cpu, u16 opcode)
         break;
     case 0xD:
         // Dxyn - DRW Vx, Vy, nibble
+        VF = 0;
         for (size_t i = 0; i < n; i++)
         {
             sprite[i] = read_u8(cpu, I + (u16)i);
         }
-
         VF = drawSprite(sprite, n, Vx, Vy);
         break;
     case 0xE:

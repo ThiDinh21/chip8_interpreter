@@ -94,7 +94,7 @@ u8 drawSprite(u8 *sprite, u8 n, u8 x, u8 y)
             const u8 pixel = getPixel((x + bit) * SCALE, (y + row) * SCALE);
             const u8 color = pixel ^ spritePixel ? 255 : 0;
 
-            if (pixel == 1)
+            if (pixel == 1 && spritePixel == 1)
             {
                 isCollided = 1;
             }
