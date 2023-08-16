@@ -282,7 +282,7 @@ void decode(CHIP8 *cpu, u16 opcode)
             Vx = cpu->delay_timer;
             break;
         case 0x0A:
-
+            Vx = waitForUserInput();
             break;
         // Fx15 - LD DT, Vx
         case 0x15:
