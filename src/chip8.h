@@ -37,6 +37,7 @@ typedef struct Chip8
     u8 v[16]; // 16 general purpose 8-bit registers
     u16 i;    // 16-bit registers general used to store adresses so only the lowest (rightmost) 12 bits are usually used
     // TODO: delay + sound registers
+    u8 delay_timer;
     u16 pc; // program counter
     u8 sp;  // stack pointer
 } CHIP8;

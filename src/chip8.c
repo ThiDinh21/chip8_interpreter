@@ -21,7 +21,8 @@ CHIP8 *CHIP8_new(u8 *rom, long romSize)
     cpu->ram = calloc(4096, sizeof(u8));
     memset(cpu->v, 0, sizeof(cpu->v));
     memset(cpu->stack, 0, sizeof(cpu->stack));
-    // TODO: init delay, sound
+    // TODO: init sound
+    cpu->delay_timer = 0;
 
     SP = 0;
     cpu->pc = 0x0200;
@@ -57,6 +58,10 @@ void eventLoop(CHIP8 *cpu)
         }
         u16 opcode = fetch_opcode(cpu);
         decode(cpu, opcode);
+        if (cpu->delay_timer > 0)
+        {
+            cpu->delay_timer--;
+        }
     }
 }
 
@@ -105,7 +110,6 @@ void decode(CHIP8 *cpu, u16 opcode)
     u8 kk = opcode & 0x00FF;
 
     u8 sprite[n];
-    // printf("nnn: %x; n: %x; x: %x; y: %x; kk: %x\n", nnn, n, x, y, kk);
 
     switch (firstNibble)
     {
@@ -271,35 +275,51 @@ void decode(CHIP8 *cpu, u16 opcode)
     case 0xF:
         switch (kk)
         {
+        // Fx07 - LD Vx, DT
         case 0x07:
-
+            Vx = cpu->delay_timer;
             break;
         case 0x0A:
 
             break;
+        // Fx15 - LD DT, Vx
         case 0x15:
-
+            cpu->delay_timer = Vx;
             break;
         case 0x18:
 
             break;
+        // Fx1E - ADD I, Vx
         case 0x1E:
-
+            cpu->i += Vx;
             break;
+        // Fx29 - LD F, Vx
         case 0x29:
-
+            cpu->i = 0x50 + Vx * 5;
             break;
+        // Fx33 - LD B, Vx
         case 0x33:
-
+            printf("0xFx33: %d -> %d + %d + %d", Vx, (Vx / 100) % 10, (Vx / 10) % 10, Vx % 10);
+            write_u8(cpu, cpu->i, (Vx / 100) % 10);
+            write_u8(cpu, cpu->i + 1, (Vx / 10) % 10);
+            write_u8(cpu, cpu->i + 2, Vx % 10);
             break;
+        // Fx55 - LD [I], Vx
         case 0x55:
-
+            for (int i = 0; i < 16; i++)
+            {
+                write_u8(cpu, cpu->i + i, cpu->v[i]);
+            }
             break;
+        // Fx65 - LD Vx, [I]
         case 0x65:
-
+            for (int i = 0; i < 16; i++)
+            {
+                cpu->v[i] = read_u8(cpu, cpu->i + i);
+            }
             break;
         default:
-            op_null(code);
+            op_null(opcode);
             break;
         }
         break;
