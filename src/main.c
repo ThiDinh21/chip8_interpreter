@@ -36,7 +36,6 @@ int main(int argc, char **argv)
     initSDL();
 
     eventLoop(cpu);
-    // testSDL();
 
     // Clean up
     destroySDL();

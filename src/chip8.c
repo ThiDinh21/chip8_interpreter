@@ -301,7 +301,6 @@ void decode(CHIP8 *cpu, u16 opcode)
             break;
         // Fx33 - LD B, Vx
         case 0x33:
-            printf("0xFx33: %d -> %d + %d + %d", Vx, (Vx / 100) % 10, (Vx / 10) % 10, Vx % 10);
             write_u8(cpu, cpu->i, (Vx / 100) % 10);
             write_u8(cpu, cpu->i + 1, (Vx / 10) % 10);
             write_u8(cpu, cpu->i + 2, Vx % 10);
