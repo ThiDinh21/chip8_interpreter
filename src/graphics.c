@@ -159,6 +159,11 @@ static inline u8 getKeyValue(SDL_Scancode code)
     return 16;
 }
 
+int getKeyboardState(u8 key)
+{
+    return keyboard[key];
+}
+
 int handleUserInterrupt(void)
 {
     SDL_Event event;
@@ -195,7 +200,32 @@ int handleUserInterrupt(void)
     return 0;
 }
 
-int getKeyboardState(u8 key)
+u8 waitForUserInput(void)
 {
-    return keyboard[key];
+    SDL_Event event;
+    SDL_Scancode scancode;
+    u8 key = 16;
+
+    while (1)
+    {
+        while (SDL_PollEvent(&event))
+        {
+            switch (event.type)
+            {
+            case SDL_QUIT:
+                exit(1);
+            case SDL_KEYDOWN:
+                scancode = event.key.keysym.scancode;
+                key = getKeyValue(scancode);
+                if (key < 16)
+                {
+                    keyboard[key] = 1;
+                    return key;
+                }
+                break;
+            default:
+                break;
+            }
+        }
+    }
 }

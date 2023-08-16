@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "chip8.h"
 #include "graphics.h"
@@ -62,6 +63,7 @@ void eventLoop(CHIP8 *cpu)
         {
             cpu->delay_timer--;
         }
+        // sleep(1);
     }
 }
 
@@ -306,14 +308,14 @@ void decode(CHIP8 *cpu, u16 opcode)
             break;
         // Fx55 - LD [I], Vx
         case 0x55:
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < x + 1; i++)
             {
                 write_u8(cpu, cpu->i + i, cpu->v[i]);
             }
             break;
         // Fx65 - LD Vx, [I]
         case 0x65:
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < x + 1; i++)
             {
                 cpu->v[i] = read_u8(cpu, cpu->i + i);
             }
