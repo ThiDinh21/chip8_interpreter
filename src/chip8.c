@@ -11,7 +11,6 @@
 #define Vx cpu->v[x]
 #define Vy cpu->v[y]
 #define VF cpu->v[0xF]
-#define I cpu->i
 #define PC cpu->pc
 #define SP cpu->sp
 
@@ -28,7 +27,7 @@ CHIP8 *CHIP8_new(u8 *rom, long romSize)
     cpu->delay_timer = 0;
 
     SP = 0;
-    cpu->pc = 0x0200;
+    PC = 0x0200;
 
     // Store built-in font in 0x50 - 0x9F
     for (size_t character = 0; character < 16; character++)
@@ -72,7 +71,7 @@ void cycle(CHIP8 *cpu)
         gettimeofday(&t2, NULL);
         elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;
 
-        // reduce delay timer each 16.(6) ms if > 0
+        // decrease delay timer by 1 each 16.(6) ms if > 0
         if (cpu->delay_timer > 0)
         {
             int amountToReduce = (int)floor(elapsedTime / 16.7);
@@ -160,7 +159,7 @@ void decode(CHIP8 *cpu, u16 opcode)
         break;
     case 1:
         // 1nnn - JUMP
-        cpu->pc = nnn;
+        PC = nnn;
         break;
     case 2:
         // 2nnn - CALL addr
@@ -255,7 +254,7 @@ void decode(CHIP8 *cpu, u16 opcode)
         break;
     case 0xA:
         // Annn - LD I, addr
-        I = nnn;
+        cpu->i = nnn;
         break;
     case 0xB:
         // JP V0, addr
@@ -270,7 +269,7 @@ void decode(CHIP8 *cpu, u16 opcode)
         VF = 0;
         for (size_t i = 0; i < n; i++)
         {
-            sprite[i] = read_u8(cpu, I + (u16)i);
+            sprite[i] = read_u8(cpu, cpu->i + (u16)i);
         }
         VF = drawSprite(sprite, n, Vx, Vy);
         break;
@@ -303,6 +302,7 @@ void decode(CHIP8 *cpu, u16 opcode)
         case 0x07:
             Vx = cpu->delay_timer;
             break;
+        // LD Vx, K
         case 0x0A:
             Vx = waitForUserInput();
             break;
@@ -311,7 +311,7 @@ void decode(CHIP8 *cpu, u16 opcode)
             cpu->delay_timer = Vx;
             break;
         case 0x18:
-
+            // TODO: sound
             break;
         // Fx1E - ADD I, Vx
         case 0x1E:
