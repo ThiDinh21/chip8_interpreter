@@ -125,7 +125,7 @@ static inline u16 fetch_opcode(CHIP8 *cpu)
     return opcode;
 }
 
-void eventLoop(CHIP8 *cpu);
+void cycle(CHIP8 *cpu);
 
 void decode(CHIP8 *cpu, u16 opcode);
 

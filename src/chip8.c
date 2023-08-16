@@ -49,7 +49,7 @@ void CHIP8_destroy(CHIP8 *cpu)
     free(cpu);
 }
 
-void eventLoop(CHIP8 *cpu)
+void cycle(CHIP8 *cpu)
 {
     while (1)
     {
