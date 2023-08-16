@@ -9,7 +9,7 @@ all: main.out
 	gcc -c $(CFLAGS) $< -o $@
 
 main.out: src/main.c $(OBJECTS)
-	cc $(CFLAGS) src/main.c $(OBJECTS) -o main.out $(SDL2_FLAGS)
+	cc $(CFLAGS) src/main.c $(OBJECTS) -o main.out $(SDL2_FLAGS) -lm
 
 .PHONY: clean
 clean:
