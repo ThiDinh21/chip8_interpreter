@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
@@ -18,13 +17,15 @@ CHIP8 *CHIP8_new(u8 *rom, long romSize)
 {
     // For Cxkk
     srand(time(NULL));
-
-    CHIP8 *cpu = calloc(61, sizeof(u8));
+    CHIP8 *cpu = calloc(sizeof(*cpu), sizeof(u8));
     cpu->ram = calloc(4096, sizeof(u8));
     memset(cpu->v, 0, sizeof(cpu->v));
     memset(cpu->stack, 0, sizeof(cpu->stack));
+    memset(cpu->display, 0, sizeof(cpu->display));
+    cpu->drawFlag = 0;
+
     // TODO: init sound
-    cpu->delay_timer = 0;
+    cpu->delayTimer = 0;
 
     SP = 0;
     PC = 0x0200;
@@ -52,14 +53,8 @@ void CHIP8_destroy(CHIP8 *cpu)
 
 void cycle(CHIP8 *cpu)
 {
-    struct timeval t1, t2;
-    double elapsedTime;
-
     while (1)
     {
-        // start timer
-        gettimeofday(&t1, NULL);
-
         if (handleUserInterrupt() == 1)
         {
             break;
@@ -67,24 +62,16 @@ void cycle(CHIP8 *cpu)
         u16 opcode = fetch_opcode(cpu);
         decode(cpu, opcode);
 
-        // end timer
-        gettimeofday(&t2, NULL);
-        elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;
-
-        // decrease delay timer by 1 each 16.(6) ms if > 0
-        if (cpu->delay_timer > 0)
+        if (cpu->drawFlag == 1)
         {
-            int amountToReduce = (int)floor(elapsedTime / 16.7);
-            if (cpu->delay_timer > amountToReduce)
-            {
-                cpu->delay_timer -= amountToReduce;
-            }
-            else
-            {
-                cpu->delay_timer = 0;
-            }
+            renderToScreen(cpu);
         }
-        // sleep(1);
+
+        if (cpu->delayTimer > 0)
+        {
+            cpu->delayTimer--;
+        }
+        usleep(1000);
     }
 }
 
@@ -132,15 +119,13 @@ void decode(CHIP8 *cpu, u16 opcode)
     u8 y = (opcode & 0x00F0) >> 4;
     u8 kk = opcode & 0x00FF;
 
-    u8 sprite[n];
-
     switch (firstNibble)
     {
     case 0:
         // 00E0 - CLS
         if (opcode == 0x00E0)
         {
-            cls();
+            cls(cpu);
         }
         // 00EE - RET
         else if (opcode == 0x00EE)
@@ -266,12 +251,7 @@ void decode(CHIP8 *cpu, u16 opcode)
         break;
     case 0xD:
         // Dxyn - DRW Vx, Vy, nibble
-        VF = 0;
-        for (size_t i = 0; i < n; i++)
-        {
-            sprite[i] = read_u8(cpu, cpu->i + (u16)i);
-        }
-        VF = drawSprite(sprite, n, Vx, Vy);
+        drawSprite(cpu, n, Vx, Vy);
         break;
     case 0xE:
         // Ex9E - SKP Vx
@@ -300,7 +280,7 @@ void decode(CHIP8 *cpu, u16 opcode)
         {
         // Fx07 - LD Vx, DT
         case 0x07:
-            Vx = cpu->delay_timer;
+            Vx = cpu->delayTimer;
             break;
         // LD Vx, K
         case 0x0A:
@@ -308,7 +288,7 @@ void decode(CHIP8 *cpu, u16 opcode)
             break;
         // Fx15 - LD DT, Vx
         case 0x15:
-            cpu->delay_timer = Vx;
+            cpu->delayTimer = Vx;
             break;
         case 0x18:
             // TODO: sound
