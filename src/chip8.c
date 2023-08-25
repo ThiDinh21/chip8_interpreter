@@ -25,7 +25,7 @@ CHIP8 *CHIP8_new(u8 *rom, long romSize)
     cpu->drawFlag = 0;
 
     // TODO: init sound
-    cpu->delay_timer = 0;
+    cpu->delayTimer = 0;
 
     SP = 0;
     PC = 0x0200;
@@ -62,9 +62,9 @@ void cycle(CHIP8 *cpu)
         u16 opcode = fetch_opcode(cpu);
         decode(cpu, opcode);
 
-        if (cpu->delay_timer > 0)
+        if (cpu->delayTimer > 0)
         {
-            cpu->delay_timer--;
+            cpu->delayTimer--;
         }
         usleep(1000);
     }
@@ -282,7 +282,7 @@ void decode(CHIP8 *cpu, u16 opcode)
         {
         // Fx07 - LD Vx, DT
         case 0x07:
-            Vx = cpu->delay_timer;
+            Vx = cpu->delayTimer;
             break;
         // LD Vx, K
         case 0x0A:
@@ -290,7 +290,7 @@ void decode(CHIP8 *cpu, u16 opcode)
             break;
         // Fx15 - LD DT, Vx
         case 0x15:
-            cpu->delay_timer = Vx;
+            cpu->delayTimer = Vx;
             break;
         case 0x18:
             // TODO: sound
