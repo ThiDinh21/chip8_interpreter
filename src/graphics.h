@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <SDL2/SDL.h>
 
+#include "chip8.h"
+
 #define SCALE 10
 
 static const SDL_Scancode scancodeMap[16] = {
@@ -20,9 +22,9 @@ static const SDL_Scancode scancodeMap[16] = {
     SDL_SCANCODE_Z,
     SDL_SCANCODE_C,
     SDL_SCANCODE_4,
-    SDL_SCANCODE_D,
-    SDL_SCANCODE_E,
+    SDL_SCANCODE_R,
     SDL_SCANCODE_F,
+    SDL_SCANCODE_V,
 };
 
 typedef uint8_t u8;
