@@ -23,6 +23,7 @@ CHIP8 *CHIP8_new(u8 *rom, long romSize)
     memset(cpu->v, 0, sizeof(cpu->v));
     memset(cpu->stack, 0, sizeof(cpu->stack));
     memset(cpu->display, 0, sizeof(cpu->display));
+    cpu->drawFlag = 0;
 
     // TODO: init sound
     cpu->delay_timer = 0;

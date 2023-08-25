@@ -41,6 +41,7 @@ typedef struct Chip8
     u8 delay_timer;
     u16 pc; // program counter
     u8 sp;  // stack pointer
+    u8 drawFlag;
 } CHIP8;
 
 /// @brief CHIP-8's common built-in font. Stored in 0x50 - 0x9F
