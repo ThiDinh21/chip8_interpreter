@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
@@ -54,14 +53,8 @@ void CHIP8_destroy(CHIP8 *cpu)
 
 void cycle(CHIP8 *cpu)
 {
-    struct timeval t1, t2;
-    double elapsedTime;
-
     while (1)
     {
-        // start timer
-        gettimeofday(&t1, NULL);
-
         if (handleUserInterrupt() == 1)
         {
             break;
@@ -69,24 +62,11 @@ void cycle(CHIP8 *cpu)
         u16 opcode = fetch_opcode(cpu);
         decode(cpu, opcode);
 
-        // end timer
-        gettimeofday(&t2, NULL);
-        elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;
-
-        // decrease delay timer by 1 each 16.(6) ms if > 0
         if (cpu->delay_timer > 0)
         {
-            int amountToReduce = (int)floor(elapsedTime / 16.7);
-            if (cpu->delay_timer > amountToReduce)
-            {
-                cpu->delay_timer -= amountToReduce;
-            }
-            else
-            {
-                cpu->delay_timer = 0;
-            }
+            cpu->delay_timer--;
         }
-        // sleep(1);
+        usleep(1000);
     }
 }
 
