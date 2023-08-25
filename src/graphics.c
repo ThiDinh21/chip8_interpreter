@@ -1,3 +1,4 @@
+#include "chip8.h"
 #include "graphics.h"
 
 static SDL_Window *window;
@@ -5,8 +6,6 @@ static SDL_Renderer *renderer;
 static SDL_Surface *surface;
 static SDL_Texture *texture;
 static u8 keyboard[16] = {0};
-
-u8 getPixel(u8 x, u8 y);
 
 static inline u8 getKeyValue(SDL_Scancode);
 
@@ -40,9 +39,6 @@ void initSDL(void)
                                 SDL_TEXTUREACCESS_TARGET, 64, 32);
 
     surface = SDL_GetWindowSurface(window);
-
-    // Clear color texture
-    cls();
 }
 
 void destroySDL(void)
@@ -53,64 +49,69 @@ void destroySDL(void)
     SDL_Quit();
 }
 
-void cls(void)
+void cls(CHIP8 *cpu)
 {
-    SDL_SetRenderTarget(renderer, texture);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-    SDL_SetRenderTarget(renderer, NULL);
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
-    SDL_RenderPresent(renderer);
+    memset(cpu->display, 0, sizeof(cpu->display));
+    cpu->drawFlag = 1;
 }
 
-u8 getPixel(u8 x, u8 y)
+void drawSprite(CHIP8 *cpu, u8 n, u8 x, u8 y)
 {
-    const u8 bpp = surface->format->BytesPerPixel;
-    /*
-    Retrieve the address to a specific pixel
-    surface->pixels	    = an array containing the SDL_Surface' pixels
-    surface->pitch		= the length of a row of pixels (in bytes)
-    X and Y				= the offset on where on the image to retrieve the pixel, (0, 0) is in the upper left corner of the image
-    */
-    u8 *pixel = (u8 *)surface->pixels + y * surface->pitch + x * bpp;
-    Uint32 pixelData = *(Uint32 *)pixel;
-    u8 r, g, b;
-    SDL_GetRGB(pixelData, surface->format, &r, &g, &b);
-
-    return (r == 0 && g == 0 && b == 0) ? 0 : 1;
-}
-
-u8 drawSprite(u8 *sprite, u8 n, u8 x, u8 y)
-{
-    SDL_SetRenderTarget(renderer, texture);
-
+    u8 sprite[n];
     u8 isCollided = 0;
+
+    for (size_t i = 0; i < n; i++)
+    {
+        sprite[i] = read_u8(cpu, cpu->i + (u16)i);
+    }
+
     for (size_t row = 0; row < n; row++)
     {
+        if (y + row >= 32)
+        {
+            break;
+        }
         u8 spriteRow = sprite[row];
         for (size_t bit = 0; bit < 8; bit++)
         {
-            const u8 spritePixel = (spriteRow & 0b10000000) >> 7;
-            const u8 pixel = getPixel((x + bit) * SCALE, (y + row) * SCALE);
-            const u8 color = pixel ^ spritePixel ? 255 : 0;
-
-            if (pixel == 1 && spritePixel == 1)
+            if (x + bit >= 64)
             {
-                isCollided = 1;
+                break;
             }
+            const u8 spritePixel = spriteRow & (0b10000000 >> bit);
 
+            if (spritePixel != 0)
+            {
+                if (cpu->display[x + bit][y + row] == 1)
+                {
+                    isCollided = 1;
+                }
+                cpu->display[x + bit][y + row] ^= 1;
+            }
+        }
+    }
+
+    cpu->v[0xF] = isCollided;
+    cpu->drawFlag = 1;
+}
+
+void renderToScreen(CHIP8 *cpu)
+{
+    SDL_SetRenderTarget(renderer, texture);
+
+    for (size_t x = 0; x < 64; x++)
+    {
+        for (size_t y = 0; y < 32; y++)
+        {
+            u8 color = cpu->display[x][y] == 0 ? 0 : 255;
             SDL_SetRenderDrawColor(renderer, color, color, color, 255);
-            SDL_RenderDrawPoint(renderer, (x + bit) % 64, (y + row) % 32);
-
-            spriteRow = spriteRow << 1;
+            SDL_RenderDrawPoint(renderer, x, y);
         }
     }
 
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
-
-    return isCollided;
 }
 
 static inline u8 getKeyValue(SDL_Scancode code)

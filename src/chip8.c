@@ -62,6 +62,11 @@ void cycle(CHIP8 *cpu)
         u16 opcode = fetch_opcode(cpu);
         decode(cpu, opcode);
 
+        if (cpu->drawFlag == 1)
+        {
+            renderToScreen(cpu);
+        }
+
         if (cpu->delayTimer > 0)
         {
             cpu->delayTimer--;
@@ -114,15 +119,13 @@ void decode(CHIP8 *cpu, u16 opcode)
     u8 y = (opcode & 0x00F0) >> 4;
     u8 kk = opcode & 0x00FF;
 
-    u8 sprite[n];
-
     switch (firstNibble)
     {
     case 0:
         // 00E0 - CLS
         if (opcode == 0x00E0)
         {
-            cls();
+            cls(cpu);
         }
         // 00EE - RET
         else if (opcode == 0x00EE)
@@ -248,12 +251,7 @@ void decode(CHIP8 *cpu, u16 opcode)
         break;
     case 0xD:
         // Dxyn - DRW Vx, Vy, nibble
-        VF = 0;
-        for (size_t i = 0; i < n; i++)
-        {
-            sprite[i] = read_u8(cpu, cpu->i + (u16)i);
-        }
-        VF = drawSprite(sprite, n, Vx, Vy);
+        drawSprite(cpu, n, Vx, Vy);
         break;
     case 0xE:
         // Ex9E - SKP Vx

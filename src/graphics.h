@@ -32,9 +32,11 @@ void initSDL(void);
 
 void destroySDL(void);
 
-void cls(void);
+void cls(CHIP8 *cpu);
 
-u8 drawSprite(u8 *sprite, u8 n, u8 x, u8 y);
+void drawSprite(CHIP8 *cpu, u8 n, u8 x, u8 y);
+
+void renderToScreen(CHIP8 *cpu);
 
 int getKeyboardState(u8 key);
 
