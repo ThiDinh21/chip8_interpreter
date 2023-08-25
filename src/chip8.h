@@ -34,6 +34,7 @@ typedef struct Chip8
     // +---------------+= 0x000 (0) Start of Chip-8 RAM
     u8 *ram;
     u16 stack[16];
+    u8 display[64][32];
     u8 v[16]; // 16 general purpose 8-bit registers
     u16 i;    // 16-bit registers general used to store adresses so only the lowest (rightmost) 12 bits are usually used
     // TODO: delay + sound registers

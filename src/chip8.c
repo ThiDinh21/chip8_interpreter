@@ -18,11 +18,12 @@ CHIP8 *CHIP8_new(u8 *rom, long romSize)
 {
     // For Cxkk
     srand(time(NULL));
-
-    CHIP8 *cpu = calloc(61, sizeof(u8));
+    CHIP8 *cpu = calloc(sizeof(*cpu), sizeof(u8));
     cpu->ram = calloc(4096, sizeof(u8));
     memset(cpu->v, 0, sizeof(cpu->v));
     memset(cpu->stack, 0, sizeof(cpu->stack));
+    memset(cpu->display, 0, sizeof(cpu->display));
+
     // TODO: init sound
     cpu->delay_timer = 0;
 
