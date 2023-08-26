@@ -10,9 +10,9 @@ It was made to allow more easily programed game for those computers. All program
 
 ## Preview
 
-![chip-walo](images/sample.png)
+![chip8_interpreter](images/preview.png)
 
-## Building
+## Installation
 
 ### Linux
 
