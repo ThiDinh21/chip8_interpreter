@@ -127,8 +127,13 @@ static inline u16 fetch_opcode(CHIP8 *cpu)
     return opcode;
 }
 
+/// @brief Loops CPU cycles (read usr input -> decode -> execute -> render)
+/// @param cpu a pointer of type CHIP8 *
 void cycle(CHIP8 *cpu);
 
+/// @brief Decode and execute the provided opcode
+/// @param cpu a pointer of type CHIP8 *
+/// @param opcode an u16 number
 void decode(CHIP8 *cpu, u16 opcode);
 
 #endif
