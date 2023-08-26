@@ -4,9 +4,11 @@
 
 ## Introduction
 
-CHIP-8 is an interpreted programming language which was initially used in the late 1970s.
+CHIP-8 is an interpreted programming language, developed by Joseph Weisbecker made on his 1802 Microprocessor. It was initially used on the COSMAC VIP and Telmac 1800 8-bit microcomputers in the mid-1970s.
 
-It was made to allow more easily programed game for those computers. All programs written in CHIP-8 are run on a virtual machine which interprets each instruction.
+> Source: [Wikipedia](https://en.wikipedia.org/wiki/CHIP-8)
+
+The project's aim is to emulate the behavior of the CHIP-8 and enable the user to run CHIP-8 programs on modern hardware, like PONG or SPACE INVADERS.
 
 ## Preview
 
