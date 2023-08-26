@@ -36,17 +36,6 @@ void initSDL(void);
 /// @brief Clean up SDL components
 void destroySDL(void);
 
-/// @brief Clear the screen by setting the CHIP8's display to 0
-/// @param cpu a pointer of type CHIP8 *
-void cls(CHIP8 *cpu);
-
-/// @brief Update the CHIP8's dispay with the new sprite
-/// @param cpu a pointer of type CHIP8 *, the sprite starts at the I register
-/// @param n length of the sprite
-/// @param x X coord of the display to draw
-/// @param y Y coord of the display to draw
-void drawSprite(CHIP8 *cpu, u8 n, u8 x, u8 y);
-
 /// @brief Render the CPU's display to SDL Window
 /// @param cpu a pointer of type CHIP8 *
 void renderToScreen(CHIP8 *cpu);

@@ -136,4 +136,15 @@ void cycle(CHIP8 *cpu);
 /// @param opcode an u16 number
 void decode(CHIP8 *cpu, u16 opcode);
 
+/// @brief Clear the screen by setting the CHIP8's display to 0
+/// @param cpu a pointer of type CHIP8 *
+void cls(CHIP8 *cpu);
+
+/// @brief Update the CHIP8's dispay with the new sprite
+/// @param cpu a pointer of type CHIP8 *, the sprite starts at the I register
+/// @param n length of the sprite
+/// @param x X coord of the display to draw
+/// @param y Y coord of the display to draw
+void drawSprite(CHIP8 *cpu, u8 n, u8 x, u8 y);
+
 #endif

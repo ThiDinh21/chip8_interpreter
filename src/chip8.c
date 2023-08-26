@@ -331,3 +331,49 @@ void decode(CHIP8 *cpu, u16 opcode)
         break;
     }
 }
+
+void cls(CHIP8 *cpu)
+{
+    memset(cpu->display, 0, sizeof(cpu->display));
+    cpu->drawFlag = 1;
+}
+
+void drawSprite(CHIP8 *cpu, u8 n, u8 x, u8 y)
+{
+    u8 sprite[n];
+    u8 isCollided = 0;
+
+    for (size_t i = 0; i < n; i++)
+    {
+        sprite[i] = read_u8(cpu, cpu->i + (u16)i);
+    }
+
+    for (size_t row = 0; row < n; row++)
+    {
+        if (y + row >= 32)
+        {
+            break;
+        }
+        u8 spriteRow = sprite[row];
+        for (size_t bit = 0; bit < 8; bit++)
+        {
+            if (x + bit >= 64)
+            {
+                break;
+            }
+            const u8 spritePixel = spriteRow & (0b10000000 >> bit);
+
+            if (spritePixel != 0)
+            {
+                if (cpu->display[x + bit][y + row] == 1)
+                {
+                    isCollided = 1;
+                }
+                cpu->display[x + bit][y + row] ^= 1;
+            }
+        }
+    }
+
+    cpu->v[0xF] = isCollided;
+    cpu->drawFlag = 1;
+}
